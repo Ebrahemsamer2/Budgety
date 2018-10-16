@@ -43,8 +43,6 @@ var budgetController = (function() {
 				ID = 0;
 			}
 			
-			ID = data.allItems[type].length +1 ;
-
 			if(type === "inc"){
 				Item = new Income(ID, desc, val);
 			}else {
@@ -53,6 +51,22 @@ var budgetController = (function() {
 			data.allItems[type].push(Item);
 			return Item;
 		},
+
+		deleteItem: function(type, id) {
+			var ids, index;
+			ids = data.allItems[type].map(function(current) {
+				return current.id;
+			});
+
+			index = ids.index(id);
+
+			// delete index 
+			if(index !== -1 ) {
+				data.allItems[type].splice(index,1);
+			} 
+
+		},
+
 		calculateBudget: function() {
 
 			// Calculate total income and expenses
@@ -181,6 +195,8 @@ var controller = (function(budgetCtrl , UICtrl){
 				addItemClick();
 			}
 		});
+
+		document.querySelector('.container').addEventListener('click' , addDelegationItem);
 	};
 
 	var updateBudget = function() {
@@ -216,6 +232,28 @@ var controller = (function(budgetCtrl , UICtrl){
 		}
 	};
 
+	var addDelegationItem = function(event) {
+
+		var itemID, splitID, type, ID ;
+		itemID = event.target.parentNode.parentNode.parentNode.parentNode.id ;
+
+		if(itemID) {
+
+			splitID = itemID.split('-');
+			type = splitID[0];
+			ID = parseInt(splitID[1]);
+
+			// delete item
+			budgetCtrl.deleteItem(type, ID);
+
+			// delete item from UI
+
+			// Update Budget	
+
+
+		}
+
+	};
 	return {
 		init: function() {
 			console.log('Application is started');

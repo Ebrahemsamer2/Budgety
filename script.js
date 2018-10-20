@@ -149,7 +149,7 @@ var UIController = (function() {
 	};
 	var formatNumber = function(num , type) {
 		var int, type, dec, split_num , sign;
-		num = Math.abs();
+		num = Math.abs(num);
 		num = num.toFixed(2);
 
 		split_num = num.split('.');
@@ -188,7 +188,7 @@ var UIController = (function() {
 			
 			newHTML = html.replace('%id%',obj.id);
 			newHTML = newHTML.replace('%description%',obj.description);
-			newHTML = newHTML.replace('%value%',obj.value);
+			newHTML = newHTML.replace('%value%',formatNumber(obj.value, type));
 
 			// enter data to html
 
@@ -219,9 +219,9 @@ var UIController = (function() {
 			var type;
 			obj.budget > 0 ? type = 'inc' : type = 'exp';
 
-			document.querySelector(DOMinputs.budget_value).textContent = obj.budget;
-			document.querySelector(DOMinputs.total_income_val).textContent = obj.totalIncome;
-			document.querySelector(DOMinputs.total_expenses_val).textContent = obj.totalExpenses ;
+			document.querySelector(DOMinputs.budget_value).textContent = formatNumber(obj.budget,type);
+			document.querySelector(DOMinputs.total_income_val).textContent = formatNumber(obj.totalIncome,'inc');
+			document.querySelector(DOMinputs.total_expenses_val).textContent = formatNumber(obj.totalExpenses,'exp') ;
 
 			if(obj.percentege > 0 ){
 				document.querySelector(DOMinputs.total_expenses_percetege).textContent = obj.percentege +'%';

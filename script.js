@@ -144,7 +144,25 @@ var UIController = (function() {
 		total_expenses_val: '.budget__expenses--value',
 		total_expenses_percetege: '.budget__expenses--percentage',
 
-		exp_percentage: '.item__percentage'
+		exp_percentage: '.item__percentage',
+		budget_month: '.budget__title--month'
+	};
+	var formatNumber = function(num , type) {
+		var int, type, dec, split_num , sign;
+		num = Math.abs();
+		num = num.toFixed(2);
+
+		split_num = num.split('.');
+		int = split_num[0];
+
+		if(int.length > 3){
+			int = int.substr(0 , int.length - 3) +','+int.substr(int.length - 3, 3);
+		}
+
+		dec = split_num[1];
+
+		type === 'inc' ? sign = '+' : sign = '-' ;
+		return sign + " " + int+dec; 
 	};
 
 	return {
@@ -167,7 +185,7 @@ var UIController = (function() {
 				html ='<div class="item clearfix" id="exp-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
 				}
 			// putting some actual data 
-
+			
 			newHTML = html.replace('%id%',obj.id);
 			newHTML = newHTML.replace('%description%',obj.description);
 			newHTML = newHTML.replace('%value%',obj.value);
@@ -198,8 +216,11 @@ var UIController = (function() {
 		},
 
 		displayBudget:function(obj) {
-			document.querySelector(DOMinputs.budget_value).textContent = obj.budget ;
-			document.querySelector(DOMinputs.total_income_val).textContent = obj.totalIncome ;
+			var type;
+			obj.budget > 0 ? type = 'inc' : type = 'exp';
+
+			document.querySelector(DOMinputs.budget_value).textContent = obj.budget;
+			document.querySelector(DOMinputs.total_income_val).textContent = obj.totalIncome;
 			document.querySelector(DOMinputs.total_expenses_val).textContent = obj.totalExpenses ;
 
 			if(obj.percentege > 0 ){
@@ -227,7 +248,17 @@ var UIController = (function() {
 			});
 
 		},
+		displayMonth: function() {
+			var now, month, year;
 
+			now = new Date();
+
+			month = now.getMonth();
+			months = ['Jan', 'Feb', 'March' , 'April','May' , 'Jon' , 'July' , 'Ogu', 'Sep' , 'Oct', 'Nov' , 'Dec'];
+			year = now.getFullYear();
+
+			document.querySelector(DOMinputs.budget_month).textContent = months[month]+" "+year;
+		},
 		getDOMstrings: function() {
 			return DOMinputs;
 		}
@@ -325,6 +356,7 @@ var controller = (function(budgetCtrl , UICtrl){
 	return {
 		init: function() {
 			console.log('Application is started');
+			UICtrl.displayMonth()
 			UICtrl.displayBudget({
 				budget: 0,
 				totalIncome: 0,
